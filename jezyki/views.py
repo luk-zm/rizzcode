@@ -1,12 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
-from .models import Language
+from .forms import LanguageForm
+from .models import Article
 
-def jezyki(request):
-    languages = Language.objects.all().values()
-    template = loader.get_template('proglan.html')
-    context = {
-        'languages': languages,
-    }
-    return HttpResponse(template.render(context, request))
+def article_list(request):
+    form = LanguageForm(request.GET or None)  # Użycie GET, jeśli tak chcesz
+    articles = []
+    selected_language = None
+
+    if form.is_valid():
+        selected_language = form.cleaned_data['language']
+        articles = Article.objects.filter(language=selected_language)
+
+    return render(request, 'languages/article_list.html', {
+        'form': form,
+        'articles': articles,
+        'selected_language': selected_language,
+    })

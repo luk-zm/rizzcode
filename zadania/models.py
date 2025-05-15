@@ -1,5 +1,4 @@
-from django.contrib.auth.models import User
-
+from django.conf import settings
 
 from django.db import models
 
@@ -31,16 +30,19 @@ class Solution(models.Model):
     Published exercise. 1:1 to the Test model.
     """
     test = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     solution = models.CharField(max_length=5000)
     pub_date = models.DateTimeField("Date Added")
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     comment = models.CharField(max_length=1000)
+
+    class Meta:
+        ordering = ['-pub_date']
 
     class Rating(models.IntegerChoices):
         SHIT = 1

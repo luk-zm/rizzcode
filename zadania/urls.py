@@ -1,11 +1,8 @@
 from django.urls import path
 from . import views
 
-app_name = "zadania"
-
 urlpatterns = [
-    path('zadania/', views.zadania, name='zadania'),
-    # strona glowna zadan
-
+    path('', views.zadania, name='exercise-list'),
+    path('<str:lang>/', views.zadania_po_jezyku, name='exercise-by-language'),
+    path('szczegoly/<int:exercise_id>/', views.szczegoly_zadania, name='exercise-detail'),
 ]
-

@@ -4,25 +4,38 @@ from django.db import models
 
 # Create your models here.
 
-
 class Exercise(models.Model):
-    title = models.CharField(max_length=30,
-                             help_text="Title of the exercise.")
-    instruction = models.CharField(max_length=300,
-                                   help_text="The Instruction to be displayed."
+    class LanguageChoices(models.TextChoices):
+        CSHARP = "C#", "Csharp"
+        PYTHON = "Py", "Python"
+        SQL = "SQL", "Structured Query Language (SQL)"
 
-                                   )
-    assert_output = models.CharField(max_length=1000,
-                                     help_text="Output (code) to be asserted.")
-    languages = {
-        "C#": "Csharp",
-        "Py": "Python",
-        "SQL": "Structured Query Language (SQL)"
-    }
-    # define langs as a choice
+    title = models.CharField(
+        max_length=30,
+        help_text="Title of the exercise."
+    )
+
+    instruction = models.CharField(
+        max_length=300,
+        help_text="The instruction to be displayed."
+    )
+
+    assert_output = models.CharField(
+        max_length=1000,
+        help_text="Output (code) to be asserted."
+    )
+
+    language = models.CharField(
+        max_length=10,
+        choices=LanguageChoices.choices,
+        default=LanguageChoices.PYTHON,
+        help_text="Programming language of the exercise."
+    )
+
 
     def __str__(self):
-        return self.assert_output
+        return self.title
+
 
 
 class Solution(models.Model):

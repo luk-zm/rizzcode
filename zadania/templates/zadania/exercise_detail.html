@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Szczegóły zadania: {{ exercise.title }}</title>
+</head>
+<body>
+    <h1>{{ exercise.title }}</h1>
+    <p><strong>Język:</strong> {{ exercise.get_language_display }}</p>
+    <h3>Instrukcja:</h3>
+    <p>{{ exercise.instruction }}</p>
+    <h3>Oczekiwany output:</h3>
+    <pre>{{ exercise.assert_output }}</pre>
+
+    <p><a href="{% url 'exercise-list' %}">Powrót do listy zadań</a></p>
+</body>
+</html>

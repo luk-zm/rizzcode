@@ -25,6 +25,6 @@ urlpatterns = [
     # Wybor artykulow
     path('', include('jezyki.urls')),
     # Wybor zadan
-    path('', include('zadania.urls')),
+    path('zadania/', include('zadania.urls')),
     path('admin/', admin.site.urls)
 ]

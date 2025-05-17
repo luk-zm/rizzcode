@@ -6,6 +6,7 @@ import subprocess
 from django.utils import timezone
 from django.db.models import Count
 from django.db import connection
+import re
 
 def zadania(request):
     exercises = Exercise.objects.all()
@@ -113,44 +114,37 @@ def szczegoly_zadania(request, exercise_id):
 @login_required
 def submit_sql_solution(request, exercise_id):
     exercise = get_object_or_404(Exercise, pk=exercise_id)
-    output = None
     error_message = None
 
     if request.method == 'POST':
         form = SQLSolutionForm(request.POST)
         if form.is_valid():
-            user_query = form.cleaned_data['solution_text']
-            
+            user_query = form.cleaned_data['solution_text'].strip()
+
+            def normalize_sql(sql):
+                sql = sql.lower()
+                sql = re.sub(r'\s+', ' ', sql)
+                return sql.strip()
+
+            user_sql_normalized = normalize_sql(user_query)
+            expected_sql_normalized = normalize_sql(exercise.assert_output)
+
             solution = Solution.objects.create(
                 user=request.user,
                 exercise=exercise,
                 solution_text=user_query,
                 pub_date=timezone.now(),
-                completed=False
+                completed=user_sql_normalized == expected_sql_normalized
             )
-            
-            try:
-                with connection.cursor() as cursor:
-                    cursor.execute(user_query)
-                    result = cursor.fetchall()
-                
-                output_str = ''.join(str(result).lower().split())
-                expected_str = ''.join(exercise.assert_output.lower().split())
-                
-                if output_str == expected_str:
-                    solution.completed = True
-                    solution.save()
-                    return render(request, 'zadania/success.html', {'exercise': exercise})
-                else:
-                    return render(request, 'zadania/failure.html', {
-                        'exercise': exercise,
-                        'output': str(result),
-                        'expected': exercise.assert_output
-                    })
 
-            except Exception as e:
-                error_message = f"SQL error: {str(e)}"
-
+            if solution.completed:
+                return render(request, 'zadania/success.html', {'exercise': exercise})
+            else:
+                return render(request, 'zadania/failure1.html', {
+                    'exercise': exercise,
+                    'user_sql': user_query,
+                    'expected_sql': exercise.assert_output
+            })
         else:
             error_message = "Invalid form submission."
     else:

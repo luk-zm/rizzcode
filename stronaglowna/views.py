@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Strona główna. Zastąpić klasą i templatem.")
+    return render(request, 'index.html')
 
 
 # Create your views here.

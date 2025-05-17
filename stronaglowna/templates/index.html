@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Practice Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            /* Light theme variables */
+            --bg-color: #f5f5f7;
+            --panel-bg: white;
+            --text-color: #333;
+            --secondary-text: #666;
+            --border-color: #e0e0e0;
+            --hover-color: #f0f0f0;
+            --completed-bg: #f0fff0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --checkbox-border: #ccc;
+            --primary-color: #4285F4;
+            --primary-hover: #3367d6;
+            --success-color: #4CAF50;
+            --progress-bg: #e0e0e0;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-color: #1f1f1f;
+            --panel-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --border-color: #444;
+            --hover-color: #3a3a3a;
+            --completed-bg: #2a3a2a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --checkbox-border: #666;
+            --primary-color: #5c9ce6;
+            --primary-hover: #4a7cb8;
+            --success-color: #5dbb63;
+            --progress-bg: #444;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .problem-panel {
+            width: 300px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 15px;
+            box-shadow: 2px 0 5px var(--shadow-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .problem-panel-header {
+            font-size: 20px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            transition: color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .problem-panel-header h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .dropdown-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .language-dropdown {
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--panel-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            width: 65%;
+        }
+
+        .language-dropdown:hover, .language-dropdown:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .problem-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .problem-item:hover {
+            background-color: var(--hover-color);
+            cursor: pointer;
+        }
+
+        .problem-item.completed {
+            background-color: var(--completed-bg);
+        }
+
+        .problem-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--checkbox-border);
+            border-radius: 4px;
+            margin-right: 10px;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .problem-checkbox:checked {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .problem-checkbox:checked::after {
+            content: "✓";
+            color: var(--panel-bg);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+        }
+
+        .problem-text {
+            flex: 1;
+            color: var(--text-color);
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--hover-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .user-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .login-button, .theme-toggle, .nav-button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle {
+            background-color: var(--secondary-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+        }
+
+        .login-button:hover, .theme-toggle:hover, .nav-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .theme-toggle:hover {
+            background-color: #555;
+        }
+
+        .theme-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .user-info {
+            display: none;
+            text-align: center;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .level-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .level-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: var(--secondary-text);
+            transition: color 0.3s ease;
+        }
+
+        .level-bar-outer {
+            width: 100%;
+            height: 10px;
+            background-color: var(--progress-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        .level-bar-inner {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 45%;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .problem-panel-header .navigation-container {
+          justify-content: flex-end;
+          width: 100%;
+          margin-top: 0px;
+        }
+
+        .nav-button {
+            /* flex: 1;  Removed flex to allow for size adjustment */
+            text-align: center;
+            padding: 6px 15px;
+            font-size: 12px;
+        }
+
+        /* Problem content area - will be populated with JS */
+        .problem-content {
+            flex: 1;
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .problem-content h2, .problem-content h3 {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .problem-content p, .problem-content pre {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        pre {
+            background-color: var(--hover-color);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        textarea {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="problem-panel">
+      <div class="problem-panel-header">
+        <h2>Problem List</h2>
+        <div class="dropdown-container">
+            <select id="languageDropdown" class="language-dropdown">
+                <option value="all">All Languages</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="ruby">Ruby</option>
+                <option value="go">Go</option>
+            </select>
+            <button class="nav-button" id="articlesButton">Articles</button>
+        </div>
+      </div>
+        <div class="problem-list" id="problemList">
+            </div>
+    </div>
+
+    <div class="main-content">
+        <div class="user-panel">
+            <div class="user-image">
+                <img id="userAvatar" src="https://via.placeholder.com/120" alt="Default avatar">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="login-button" id="loginButton">Account name / Log in</button>
+                
+                <button class="theme-toggle" id="themeToggle">
+                    <svg class="theme-icon" id="themeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="user-info" id="userInfo">
+                <div class="username" id="username">Username</div>
+            </div>
+            
+            <div class="level-container">
+                <div class="level-text">
+                    <span>Level 3</span>
+                    <span>Progress: 45%</span>
+                </div>
+                <div class="level-bar-outer">
+                    <div class="level-bar-inner"></div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="problem-content" id="problemContent">
+            <h2>Welcome to Coding Practice Platform</h2>
+            <p>Select a problem from the list to get started.</p>
+        </div>
+    </div>
+
+    <script>
+        const problems = [
+            { id: 1, title: "Two Sum", difficulty: "Easy", completed: true, language: "javascript" },
+            { id: 2, title: "Add Two Numbers", difficulty: "Medium", completed: false, language: "python" },
+            { id: 3, title: "Longest Substring Without Repeating Characters", difficulty: "Medium", completed: true, language: "java" },
+            { id: 4, title: "Median of Two Sorted Arrays", difficulty: "Hard", completed: false, language: "cpp" },
+            { id: 5, title: "Palindrome Number", difficulty: "Easy", completed: false, language: "javascript" },
+            { id: 6, title: "Regular Expression Matching", difficulty: "Hard", completed: false, language: "python" },
+            { id: 7, title: "Container With Most Water", difficulty: "Medium", completed: true, language: "java" }
+        ];
+
+        const problemListElement = document.getElementById('problemList');
+        const problemContentElement = document.getElementById('problemContent');
+        const loginButton = document.getElementById('loginButton');
+        const userInfo = document.getElementById('userInfo');
+        const usernameElement = document.getElementById('username');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+        const articlesButton = document.getElementById('articlesButton');
+        const languageDropdown = document.getElementById('languageDropdown');
+        
+        // User state
+        let isLoggedIn = false;
+        let currentUser = null;
+        let isDarkMode = false;
+        let selectedLanguage = 'all';
+
+        function filterProblemsByLanguage() {
+            if (selectedLanguage === 'all') {
+                return problems;
+            } else {
+                return problems.filter(problem => problem.language === selectedLanguage);
+            }
+        }
+
+        // Populate problem list
+        function renderProblemList() {
+            problemListElement.innerHTML = '';
+            
+            const filteredProblems = filterProblemsByLanguage();
+            
+            filteredProblems.forEach(problem => {
+                const problemItem = document.createElement('div');
+                problemItem.className = `problem-item ${problem.completed ? 'completed' : ''}`;
+                problemItem.addEventListener('click', () => selectProblem(problem));
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'problem-checkbox';
+                checkbox.checked = problem.completed;
+                checkbox.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    toggleProblemCompletion(problem.id);
+                });
+                
+                const problemText = document.createElement('div');
+                problemText.className = 'problem-text';
+                problemText.textContent = `${problem.title} (${problem.difficulty})`;
+                
+                problemItem.appendChild(checkbox);
+                problemItem.appendChild(problemText);
+                problemListElement.appendChild(problemItem);
+            });
+        }
+
+        function toggleProblemCompletion(problemId) {
+            const problem = problems.find(p => p.id === problemId);
+            if (problem) {
+                problem.completed = !problem.completed;
+                renderProblemList();
+                updateLevelProgress();
+            }
+        }
+
+        function selectProblem(problem) {
+            problemContentElement.innerHTML = `
+                <h2>${problem.title}</h2>
+                <p><strong>Difficulty:</strong> ${problem.difficulty}</p>
+                <p><strong>Language:</strong> ${problem.language.charAt(0).toUpperCase() + problem.language.slice(1)}</p>
+                <div style="margin-top: 20px;">
+                    <h3>Problem Description:</h3>
+                    <p>This is where the detailed problem description would go.</p>
+                    
+                    <h3>Examples:</h3>
+                    <pre>Input: nums = [2,7,11,15], target = 9 
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].</pre>
+
+                    <div style="margin-top: 20px;">
+                        <h3>Solution:</h3>
+                        <textarea style="width: 100%; height: 200px; font-family: monospace; padding: 10px;" placeholder="Write your solution here..."></textarea>
+                        <button style="margin-top: 10px; padding: 8px 20px; background-color: var(--success-color); color: white; border: none; border-radius: 4px; cursor: pointer;">Run Code</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle login/logout
+        loginButton.addEventListener('click', () => {
+            if (isLoggedIn) {
+                // Log out
+                isLoggedIn = false;
+                currentUser = null;
+                loginButton.textContent = "Account name / Log in";
+                loginButton.style.display = "block";
+                userInfo.style.display = "none";
+            } else {
+                // Simulate login
+                isLoggedIn = true;
+                currentUser = { username: "Student123", level: 3, progress: 45 };
+                loginButton.style.display = "block";
+                userInfo.style.display = "block";
+                usernameElement.textContent = currentUser.username;
+            }
+        });
+
+        // Update level progress based on completed problems
+        function updateLevelProgress() {
+            const completedCount = problems.filter(p => p.completed).length;
+            const totalProblems = problems.length;
+            const progressPercentage = Math.round((completedCount / totalProblems) * 100);
+            
+            document.querySelector('.level-text span:last-child').textContent = `Progress: ${progressPercentage}%`;
+            document.querySelector('.level-bar-inner').style.width = `${progressPercentage}%`;
+        }
+
+        // Toggle between light and dark themes
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                htmlElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            } else {
+                htmlElement.setAttribute('data-theme', 'light');
+                updateThemeIcon('light');
+            }
+            // Save preference to localStorage
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        // Update theme icon based on current theme
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                // Moon icon for dark mode
+                themeIcon.innerHTML = `
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                `;
+            } else {
+                // Sun icon for light mode
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                `;
+            }
+        }
+
+        // Handle navigation to Articles page
+        articlesButton.addEventListener('click', () => {
+            window.location.href = 'articles.html';
+        });
+
+        languageDropdown.addEventListener('change', (e) => {
+            selectedLanguage = e.target.value;
+            renderProblemList();
+        });
+
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                isDarkMode = savedTheme === 'dark';
+                htmlElement.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+            }
+        }
+
+        function init() {
+            renderProblemList();
+            updateLevelProgress();
+            loadThemePreference();
+        }
+
+        init();
+    </script>
+</body>
+</html>

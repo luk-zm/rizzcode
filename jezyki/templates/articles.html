@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            /* Light theme variables */
+            --bg-color: #f5f5f7;
+            --panel-bg: white;
+            --text-color: #333;
+            --secondary-text: #666;
+            --border-color: #e0e0e0;
+            --hover-color: #f0f0f0;
+            --completed-bg: #f0fff0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --checkbox-border: #ccc;
+            --primary-color: #4285F4;
+            --primary-hover: #3367d6;
+            --success-color: #4CAF50;
+            --progress-bg: #e0e0e0;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-color: #1f1f1f;
+            --panel-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --border-color: #444;
+            --hover-color: #3a3a3a;
+            --completed-bg: #2a3a2a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --checkbox-border: #666;
+            --primary-color: #5c9ce6;
+            --primary-hover: #4a7cb8;
+            --success-color: #5dbb63;
+            --progress-bg: #444;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .article-panel {
+            width: 300px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 15px;
+            box-shadow: 2px 0 5px var(--shadow-color);
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-panel-header {
+            font-size: 20px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            transition: color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-panel-header h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .dropdown-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .language-dropdown {
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--panel-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            width: 65%;
+        }
+
+        .language-dropdown:hover, .language-dropdown:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1; /* Allows the list to take available space */
+        }
+
+        .article-item {
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        .article-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .article-title {
+            color: var(--text-color);
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .main-content h2, .main-content h3 {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .main-content p {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .nav-button {
+            text-align: center;
+            padding: 6px 15px;
+            font-size: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="article-panel">
+        <div class="article-panel-header">
+            <h2>Articles</h2>
+            <div class="dropdown-container">
+                <select id="languageDropdown" class="language-dropdown">
+                    <option value="all">All Languages</option>
+                    <option value="Javascript">JavaScript</option>
+                    <option value="Python">Python</option>
+                    <option value="Java">Java</option>
+                    <option value="Cpp">C++</option>
+                    <option value="Ruby">Ruby</option>
+                    <option value="Go">Go</option>
+                </select>
+                <button class="nav-button" id="problemsButton">Problems</button>
+            </div>
+        </div>
+        <div class="article-list" id="articleList">
+            </div>
+    </div>
+
+    <div class="main-content" id="articleContent">
+        <h2>Welcome to the Articles Section</h2>
+        <p>Select an article from the list to read it.</p>
+    </div>
+
+    <script>
+        /*const articles = [
+            { 
+                id: 1, 
+                title: "Introduction to Algorithms", 
+                language: "all",
+                content: "<p>This is an introductory article about algorithms that applies to all programming languages...</p>" 
+            },
+            { 
+                id: 2, 
+                title: "Data Structures in JavaScript", 
+                language: "javascript",
+                content: "<p>Learn about data structures in JavaScript, including arrays, objects, maps, and sets...</p>" 
+            },
+            { 
+                id: 3, 
+                title: "Python for Beginners", 
+                language: "python",
+                content: "<p>Get started with Python programming language. Learn syntax, data types, and basic concepts...</p>" 
+            },
+            { 
+                id: 4, 
+                title: "Java Collections Framework", 
+                language: "java",
+                content: "<p>An overview of Java's Collections Framework including Lists, Sets, Maps and more...</p>" 
+            },
+            { 
+                id: 5, 
+                title: "Memory Management in C++", 
+                language: "cpp",
+                content: "<p>Understanding memory allocation, pointers, and how to prevent memory leaks in C++...</p>" 
+            },
+            { 
+                id: 6, 
+                title: "Web Development Best Practices", 
+                language: "all",
+                content: "<p>Best practices for web development are essential regardless of your programming language...</p>" 
+            },
+            { 
+                id: 7, 
+                title: "The Future of AI", 
+                language: "all",
+                content: "<p>Artificial intelligence is rapidly evolving across all programming ecosystems...</p>" 
+            }
+        ];*/
+        const articles = [
+          {% for article in articles %}
+          {
+            title: "{{ article.title }}",
+            language: "{{ article.language }}",
+            content: "{{ article.content }}"
+          },
+          {% endfor %}
+        ];
+
+        const articleListElement = document.getElementById('articleList');
+        const articleContentElement = document.getElementById('articleContent');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const problemsButton = document.getElementById('problemsButton');
+        let selectedLanguage = 'all';
+
+        function filterArticlesByLanguage() {
+            if (selectedLanguage === 'all') {
+                return articles;
+            } else {
+                return articles.filter(article => article.language === selectedLanguage || article.language === 'all');
+            }
+        }
+
+        function renderArticleList() {
+            articleListElement.innerHTML = ''; // Clear existing articles
+            
+            const filteredArticles = filterArticlesByLanguage();
+            
+            filteredArticles.forEach(article => {
+                const articleItem = document.createElement('div');
+                articleItem.className = 'article-item';
+                articleItem.innerHTML = `<div class="article-title">${article.title}</div>`;
+                articleItem.addEventListener('click', () => selectArticle(article));
+                articleListElement.appendChild(articleItem);
+            });
+        }
+
+        function decodeHtml(html) {
+            const txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
+        function selectArticle(article) {
+            let languageInfo = "";
+            if (article.language !== 'all') {
+                languageInfo = `<p><strong>Language:</strong> ${article.language.charAt(0).toUpperCase() + article.language.slice(1)}</p>`;
+            } else {
+                languageInfo = `<p><strong>Language:</strong> All languages</p>`;
+            }
+
+            article.content = decodeHtml(article.content);
+            
+            articleContentElement.innerHTML = `
+                <h2>${article.title}</h2>
+                ${languageInfo}
+                <p>${article.content}</p>
+            `;
+        }
+
+        languageDropdown.addEventListener('change', (e) => {
+            selectedLanguage = e.target.value;
+            renderArticleList();
+        });
+
+        problemsButton.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        function init() {
+            renderArticleList();
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -7,13 +7,15 @@
     <h1>Zadania {% if selected_language %}dla języka {{ selected_language }}{% else %}– wszystkie{% endif %}</h1>
 
     <ul>
-        {% for exercise in exercises %}
-            <li>
-                <a href="{% url 'exercise-detail' exercise.id %}">{{ exercise.title }}</a>
-            </li>
-        {% empty %}
-            <li>Brak zadań dla tego języka.</li>
-        {% endfor %}
+        <ul>
+            {% for exercise in exercises %}
+                <li>
+                    <a href="{% url 'exercise-detail' exercise.id %}">{{ exercise.title }}</a>
+                </li>
+            {% empty %}
+                <li>Brak zadań dla tego języka.</li>
+            {% endfor %}
+        </ul>
     </ul>
 
     <hr>

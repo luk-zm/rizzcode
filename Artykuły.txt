@@ -1,0 +1,13 @@
+Python:
+- https://realpython.com/
+- https://www.w3schools.com/python/
+- https://www.geeksforgeeks.org/python-programming-language-tutorial/
+- https://www.infoworld.com/article/2253770/what-is-python-powerful-intuitive-programming.html
+- https://www.dummies.com/article/technology/programming-web-design/python/python-all-in-one-for-dummies-cheat-sheet-261616/
+
+SQL:
+- https://www.w3schools.com/sql/
+- https://aws.amazon.com/what-is/sql/
+- https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-sql/
+- https://www.starburst.io/data-glossary/structured-query-language-sql/
+- https://www.mysql.com/

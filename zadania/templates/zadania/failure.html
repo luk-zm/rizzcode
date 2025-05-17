@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Incorrect Solution</title>
+</head>
+<body>
+    <h1>Incorrect Solution</h1>
+    <p><strong>Your output:</strong> {{ output }}</p>
+    <p><strong>Expected output:</strong> {{ exercise.assert_output }}</p>
+
+    <p><a href="{% url 'upload-solution' exercise.id %}">Try Again</a></p>
+</body>
+</html>

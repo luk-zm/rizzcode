@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Strona głowna
@@ -26,5 +27,6 @@ urlpatterns = [
     path('', include('jezyki.urls')),
     # Wybor zadan
     path('zadania/', include('zadania.urls')),
+    path('accounts/', include('login.urls')), 
     path('admin/', admin.site.urls)
 ]

@@ -12,5 +12,27 @@
     <pre>{{ exercise.assert_output }}</pre>
 
     <p><a href="{% url 'exercise-list' %}">Powrót do listy zadań</a></p>
+    {% if exercise.language == "SQL" %}
+        <a href="{% url 'submit-sql-solution' exercise.id %}">Submit your SQL solution</a>
+    {% else %}
+        <a href="{% url 'upload-solution' exercise.id %}">Submit your solution</a>
+    {% endif %}
+
+
+    <h2>Your Statistics for this Exercise</h2>
+    <p>Total attempts: {{ attempts }}</p>
+    <p>Successful attempts: {{ successes }}</p>
+
+    {% if last_attempt %}
+    <p>Last attempt: {{ last_attempt.submitted_at|date:"Y-m-d H:i" }} - 
+        {% if last_attempt.completed %}
+            Correct
+        {% else %}
+            Incorrect
+        {% endif %}
+    </p>
+    {% else %}
+    <p>You haven't submitted any solution yet.</p>
+    {% endif %}
 </body>
 </html>

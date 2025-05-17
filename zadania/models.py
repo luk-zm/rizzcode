@@ -1,6 +1,9 @@
 from django.conf import settings
 
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 
@@ -42,11 +45,15 @@ class Solution(models.Model):
     """
     Published exercise. 1:1 to the Test model.
     """
-    test = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
-    solution = models.CharField(max_length=5000)
+    code_file = models.FileField(upload_to='solutions/', null=True, blank=True)
+    solution_text = models.TextField(null=True, blank=True)
     pub_date = models.DateTimeField("Date Added")
+
+    def __str__(self):
+        return f'Solution by {self.user.username} for {self.exercise.title}'
 
 
 class Comment(models.Model):

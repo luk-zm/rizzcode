@@ -504,21 +504,7 @@ Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].</pre>
 
         // Handle login/logout
         loginButton.addEventListener('click', () => {
-            if (isLoggedIn) {
-                // Log out
-                isLoggedIn = false;
-                currentUser = null;
-                loginButton.textContent = "Account name / Log in";
-                loginButton.style.display = "block";
-                userInfo.style.display = "none";
-            } else {
-                // Simulate login
-                isLoggedIn = true;
-                currentUser = { username: "Student123", level: 3, progress: 45 };
-                loginButton.style.display = "block";
-                userInfo.style.display = "block";
-                usernameElement.textContent = currentUser.username;
-            }
+            window.location.href = "/login/"; // or "/auth/login/" if you used a prefix
         });
 
         // Update level progress based on completed problems

@@ -20,11 +20,12 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    # Strona głowna
     path('', include('stronaglowna.urls')),
-    # Wybor artykulow
     path('', include('jezyki.urls')),
-    # Wybor zadan
     path('', include('zadania.urls')),
-    path('admin/', admin.site.urls)
+
+    path('', include('login.urls')),
+
+    path('admin/', admin.site.urls),
 ]
+

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class JezykiConfig(AppConfig):
+class main_siteConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'jezyki'
+    name = 'main_site'

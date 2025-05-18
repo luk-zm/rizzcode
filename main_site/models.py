@@ -1,8 +1,25 @@
-from django.conf import settings
-
 from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+
+class User(AbstractUser):
+    pass
+
+
+class Language(models.Model):
+    language = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.language
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    link = models.URLField(blank=True)  
+    language = models.ForeignKey(Language, related_name='articles', on_delete=models.CASCADE)
+
 
 
 class Exercise(models.Model):

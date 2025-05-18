@@ -20,12 +20,7 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('', include('stronaglowna.urls')),
-    path('', include('jezyki.urls')),
-    path('', include('zadania.urls')),
-
-    path('', include('login.urls')),
-
+    path('', include('main_site.urls')),
     path('admin/', admin.site.urls),
 ]
 

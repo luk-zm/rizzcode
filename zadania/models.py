@@ -1,39 +1,59 @@
 from django.conf import settings
 
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 
-
 class Exercise(models.Model):
-    title = models.CharField(max_length=30,
-                             help_text="Title of the exercise.")
-    instruction = models.CharField(max_length=300,
-                                   help_text="The Instruction to be displayed."
+    class LanguageChoices(models.TextChoices):
+        CSHARP = "C#", "Csharp"
+        PYTHON = "Py", "Python"
+        SQL = "SQL", "Structured Query Language (SQL)"
 
-                                   )
-    assert_output = models.CharField(max_length=1000,
-                                     help_text="Output (code) to be asserted.")
-    languages = {
-        "C#": "Csharp",
-        "Py": "Python",
-        "SQL": "Structured Query Language (SQL)"
-    }
-    # define langs as a choice
+    title = models.CharField(
+        max_length=30,
+        help_text="Title of the exercise."
+    )
+
+    instruction = models.CharField(
+        max_length=300,
+        help_text="The instruction to be displayed."
+    )
+
+    assert_output = models.CharField(
+        max_length=1000,
+        help_text="Output (code) to be asserted."
+    )
+
+    language = models.CharField(
+        max_length=10,
+        choices=LanguageChoices.choices,
+        default=LanguageChoices.PYTHON,
+        help_text="Programming language of the exercise."
+    )
+
 
     def __str__(self):
-        return self.assert_output
+        return self.title
+
 
 
 class Solution(models.Model):
     """
     Published exercise. 1:1 to the Test model.
     """
-    test = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
-    solution = models.CharField(max_length=5000)
+    code_file = models.FileField(upload_to='solutions/', null=True, blank=True)
+    solution_text = models.TextField(null=True, blank=True)
     pub_date = models.DateTimeField("Date Added")
+
+    def __str__(self):
+        return f'Solution by {self.user.username} for {self.exercise.title}'
 
 
 class Comment(models.Model):

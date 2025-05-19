@@ -11,7 +11,6 @@
     </form>
 
     {% if selected_language %}
-        <h2>Artykuły w języku {{ selected_language.language }}</h2>
         <ul>
             {% for article in articles %}
                 <li><a href="{{ article.link }}" target="_blank">{{ article.title }}</a></li>

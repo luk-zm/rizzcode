@@ -3,7 +3,7 @@ from .forms import LanguageForm
 from .models import Article
 
 def article_list(request):
-    form = LanguageForm(request.GET or None)  # Użycie GET, jeśli tak chcesz
+    form = LanguageForm(request.GET or None)  
     articles = []
     selected_language = None
 

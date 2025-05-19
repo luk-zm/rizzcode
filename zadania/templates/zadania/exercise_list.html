@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista zadań</title>
+</head>
+<body>
+    <h1>Zadania {% if selected_language %}dla języka {{ selected_language }}{% else %}– wszystkie{% endif %}</h1>
+
+    <ul>
+        <ul>
+            {% for exercise in exercises %}
+                <li>
+                    <a href="{% url 'exercise-detail' exercise.id %}">{{ exercise.title }}</a>
+                </li>
+            {% empty %}
+                <li>Brak zadań dla tego języka.</li>
+            {% endfor %}
+        </ul>
+    </ul>
+
+    <hr>
+    <p><strong>Filtruj po języku:</strong></p>
+    <ul>
+        <li><a href="{% url 'exercise-list' %}">Wszystkie</a></li>
+        <li><a href="{% url 'exercise-by-language' 'python' %}">Python</a></li>
+        <li><a href="{% url 'exercise-by-language' 'sql' %}">SQL</a></li>
+        <li><a href="{% url 'exercise-by-language' 'csharp' %}">C#</a></li>
+    </ul>
+</body>
+</html>

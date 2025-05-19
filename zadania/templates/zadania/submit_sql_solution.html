@@ -1,0 +1,8 @@
+<h1>{{ exercise.title }}</h1>
+<p>{{ exercise.instruction }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>

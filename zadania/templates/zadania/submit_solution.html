@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Solution - {{ exercise.title }}</title>
+</head>
+<body>
+    <h1>{{ exercise.title }}</h1>
+    <p><strong>Instruction:</strong> {{ exercise.instruction }}</p>
+
+    <p>Your Solution:</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <p><a href="{% url 'exercise-detail' exercise.id %}">Back to exercise details</a></p>
+</body>
+</html>

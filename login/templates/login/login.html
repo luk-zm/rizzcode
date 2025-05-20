@@ -10,12 +10,22 @@
         <p style="color: red;">Invalid username or password.</p>
     {% endif %}
 
-    <form method="post">
+    {% if next %}
+        {% if user.is_authenticated %}
+	    <p>Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.</p>
+    {% else %}
+      <p>Please login to see this page.</p>
+    {% endif %}
+  {% endif %}
+
+<form method="post" action={% url 'login' %}>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
 
     <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+    <p>Lost your password? <a href={% url 'password_reset'%}>Click here</p>
 </body>
 </html>

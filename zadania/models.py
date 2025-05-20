@@ -48,6 +48,7 @@ class Solution(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+    # wypierdolić — to nawet nie korzysta z bazy danych...
     code_file = models.FileField(upload_to='solutions/', null=True, blank=True)
     solution_text = models.TextField(null=True, blank=True)
     pub_date = models.DateTimeField("Date Added")

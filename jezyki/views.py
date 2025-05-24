@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.apps import apps
 from .forms import LanguageForm
 from .models import Article
 
@@ -13,7 +14,7 @@ def article_list(request):
         selected_language = form.cleaned_data['language']
         articles = Article.objects.filter(language=selected_language)
 
-    return render(request, 'languages/article_list.html', {
+    return render(request, 'jezyki/article_list.html', {
         'form': form,
         'articles': articles,
         'selected_language': selected_language,

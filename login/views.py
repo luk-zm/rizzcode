@@ -20,6 +20,6 @@ def register(request):
 def reset_password(request):
     return HttpResponse("TODO")
 
-
+# w ten sposob tworzymy widoki
 class CustomLoginView(LoginView):
     template_name = 'login/login.html'

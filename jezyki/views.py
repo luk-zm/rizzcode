@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
 from .forms import LanguageForm
 from .models import Article
+
 
 def article_list(request):
     form = LanguageForm(request.GET or None)  
@@ -16,3 +18,8 @@ def article_list(request):
         'articles': articles,
         'selected_language': selected_language,
     })
+#
+
+
+class ArticleView(TemplateView):
+    template_name = "index.html"

@@ -46,7 +46,7 @@ class Solution(models.Model):
     Published exercise. 1:1 to the Test model.
     """
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     # wypierdolić — to nawet nie korzysta z bazy danych...
     code_file = models.FileField(upload_to='solutions/', null=True, blank=True)

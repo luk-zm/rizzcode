@@ -5,4 +5,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    pass
+    xp = models.IntegerField(default=0)
+    lvl = models.IntegerField(default=1)
